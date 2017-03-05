@@ -23,7 +23,54 @@ What features did you end up using in your POI identifier, and what selection pr
 
 I ended up using 9 features of all including one that was newly added. When selecting features, firstly, I use my intuition to pick some important features and visualized the data to see if there were any patterns. Then, I created a new feature called 'from_poi_ratio' which indicates the proportion of emails sent from a POI among all received emails. This feature is useful in identifying the person with whom POIs were intended to contact with and be helpful to POIs. In that case, the person was very likely a POI himself. 
 
-After creating the new feature to the dataset, I used SelectKBest to check all the variables and their scores. It turned out that the new feature I added was a top scorer with the score of 14.35 and 8 other feature scored above 1. I did no scaling. I did PCA before training the classifiers. PCA worked quite well in transforming the features. Scaling may worsen the outcome.
+I test the new feature by my final classifier KNeighborsClassifier with optimal parameters of algorithm='ball_tree', leaf_size=30, metric='minkowski', n_jobs=1, n_neighbors=1, p=2, weights='uniform'. The test result has accuracy of 0.72714, precision of 0.21633, recall of 0.34700 and F1 of 0.26651. This is quite a high score for a single feature.
+
+I used the  KNeighborsClassifier as an example to test feature selection algorithms.
+
+##### KBest
+
+KBest method was used to search for more contributive features. Below are the scores for all features. The top 10 features was selected as there's a dropoff in score after 10 features, i.e. from 8.7 to 6.2 and the scores after 10 features were less significant. The selected 10 results were ['salary', 'total_payments', 'exercised_stock_options', 'bonus',
+ 'restricted_stock', 'shared_receipt_with_poi',  'total_stock_value', 'deferred_income', 'long_term_incentive','from_poi_ratio']
+
+[25.097541528735491,
+ 24.467654047526398,
+ 21.060001707536571,
+ 18.575703268041785,
+ 16.641707070469,
+ 11.595547659730601,
+ 10.072454529369441,
+ 9.3467007910514877,
+ 8.8667215371077752,
+ 8.7464855321290802,
+ 6.2342011405067401,
+ 5.3449415231473374,
+ 2.4265081272428781,
+ 2.1076559432760908,
+ 1.6988243485808501,
+ 0.2170589303395084,
+ 0.16416449823428736,
+ 0.06498431172371151]
+
+##### PCA
+
+PCA(Principal Component Analysis) was also adopted to get most of the selected features after standardization. The explained variance ratio of all 10 features is shown below. The top 3 features with contributions of more than 1% was selected. Too much features will cause overfit.
+
+[0.80230185,
+ 0.166990383,
+ 0.0189038147,
+ 0.0076052488,
+ 0.00231468982,
+ 0.00170673546,
+ 0.000116100522,
+ 6.11736479e-05,
+ 3.90279607e-09,
+ 2.04770776e-16]
+
+##### Scaler
+
+I should have adopted MinMaxScaler before using PCA, as scaler did improve the accuracy of KNN. The added value of MinMaxScaler was demonstrated from a test with 30% data points for test. The accuracy was 0.7272 before apply the scaler, and 0.7954 after that. There was indeed a significant improvement from the scaler. However, scaler would no longer work in this case as I've already selected the best 10 features from all features. What scaler do is to give every feature the equal weight. But each selected features provided by SelectKBest algorithm should not be weighted equally. There should be two options to select features (See below).The grid search score (applied in tune parameters section below) of the first option is 0.2827, while the second is 0.2717. Thus the first option was chosen.
+1. SelectKBest(k=10) => PCA(n_components = 3)
+2. Scaler => SelectKBest(k=3)
 
 ## 3. Algorithm
 
@@ -74,11 +121,11 @@ style="width:300px;height:210px;float:left">
 
 The matrix above shows the Evaluation outcome of KNeighbors Classifier. The upper blocks indicate the positive outcome after training the modified classifier. The left blocks show the data points that are True POIs in reality. Vice versa. The upper left block showes the classifier did a great job in predicting POIs. Given 15000 predictions, it correctly identified 732 POIs and failed to identify 821 POIs. The lower blocks show the negative ones. It means the classifier did a great job in predicting non-POIs. It correctly identified 12173 non-POIs and failed to identify 1268 non-POIs. 
 
-The precision and recall rates are to describe how well the classifier does in predicting the POIs. Given the accuracy 0.86, under this algorithm, the precision is 0.47 and the recall rate is 0.37. These numbers are due to the limited records of POIs in original datasets.
+The precision and recall rates are to describe how well the classifier does in predicting the POIs. Given the accuracy 0.86, under this algorithm, the precision is 0.47 and the recall rate is 0.37. These numbers are due to the limited records of POIs in original datasets.**The precision tells us that 47% of predicted POIs are true POIs, while the recall tells us that the classifier is able to find 37% of POIs of all people.**
 
 ###### Random Forest Classifier
 
 <img src="http://upload-images.jianshu.io/upload_images/2874338-1f01db92e6c55dc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
 style="width:300px;height:210px;float:left">
 
-The same explanation can be applied to Random Forest Classifier. The accuracy rate is 0.85, the precision is 0.44 and the recall rate is 0.35. Comparatively speaking, KNeighbors Classifier did a better job in predicting the POIs overall.
+The same explanation can be applied to Random Forest Classifier. The accuracy rate is 0.85, the precision is 0.44 and the recall rate is 0.35. Comparatively speaking, KNeighbors Classifier did a better job in predicting the POIs overall. **The precision tells us that 44% of predicted POIs are true POIs, while the recall tells us that the classifier is able to find 35% of POIs of all people.**
