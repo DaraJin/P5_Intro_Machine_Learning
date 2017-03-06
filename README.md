@@ -68,9 +68,9 @@ PCA(Principal Component Analysis) was also adopted to get most of the selected f
 
 ##### Scaler
 
-I should have adopted MinMaxScaler before using PCA, as scaler did improve the accuracy of KNN. The added value of MinMaxScaler was demonstrated from a test with 30% data points for test. The accuracy was 0.7272 before apply the scaler, and 0.7954 after that. There was indeed a significant improvement from the scaler. However, scaler would no longer work in this case as I've already selected the best 10 features from all features. What scaler do is to give every feature the equal weight. But each selected features provided by SelectKBest algorithm should not be weighted equally. There should be two options to select features (See below).The grid search score (applied in tune parameters section below) of the first option is 0.2827, while the second is 0.2717. Thus the first option was chosen.
-1. SelectKBest(k=10) => PCA(n_components = 3)
-2. Scaler => SelectKBest(k=3)
+I should have adopted MinMaxScaler before using PCA and KNN. As KNN are location based algorithm. The scaler did improve the accuracy of KNN. The added value of MinMaxScaler was demonstrated from a test with 30% data points for test. The accuracy was 0.7272 before apply the scaler, and 0.7954 after that. There was indeed a significant improvement from the scaler. 
+
+I understand that it's important to standardize data before PCA and KNN. However, when I introduced PCA to achieve a better outcome, the scaler no longer worked well together with PCA. The scaler + PCA + SelectKBest + KNN combination gives scores significant lower than the SelectKBest + PCA + KNN combination. It may due to chance that in this Enron financial case the unequal variance is wanted because the variance is very likely contains more information about POIs. 
 
 ## 3. Algorithm
 

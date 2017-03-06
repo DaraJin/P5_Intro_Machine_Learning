@@ -32,8 +32,9 @@ for i in my_dataset:
 
 # Update features list
 
-features_list = ['salary', 'total_payments', 'exercised_stock_options', 'bonus', 
-'restricted_stock', 'shared_receipt_with_poi',  'total_stock_value', 
+features_list = ['poi', 'salary', 'total_payments', 
+'exercised_stock_options', 'bonus', 'restricted_stock', 
+'shared_receipt_with_poi',  'total_stock_value', 
 'deferred_income', 'long_term_incentive','from_poi_ratio']
 
 ### Extract features and labels from dataset for local testing
@@ -87,11 +88,13 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest
+from sklearn.preprocessing import MinMaxScaler
 
 # SelectKBest, PCA used before tuning parameters 
 # to achieve a better outcome. 
 def scores(classifier, params):
-    steps = [('SKB', SelectKBest(k = 5)), ('PCA', PCA(n_components=3)),('CLF', classifier)]
+    steps = [('SKB', SelectKBest(k = 5)), 
+            ('PCA', PCA(n_components=3)), ('CLF', classifier)]
     pipe = Pipeline(steps)
     sss = StratifiedShuffleSplit(100, random_state = 42)
     search = GridSearchCV(pipe, params, cv = sss, scoring = "f1")
@@ -114,7 +117,7 @@ if False:
 # Random Forest
 if False:
   from sklearn.ensemble import RandomForestClassifier
-  classifer = RandomForestClassifier()
+  classifier = RandomForestClassifier()
   params = {'CLF__criterion': ('gini','entropy'),
             'CLF__min_samples_split': range(2,10),
             'CLF__max_features': [2, 3], 
@@ -122,14 +125,17 @@ if False:
   print "Random Forest", scores(classifier, params)
 
 # KNeighbors Classifier
-from sklearn.neighbors import KNeighborsClassifier
+if True:
+  from sklearn.neighbors import KNeighborsClassifier
 
-classifier = KNeighborsClassifier()
-params = {'CLF__n_neighbors': range(1,5),
-          'CLF__algorithm': ('ball_tree', 'kd_tree', 'brute')}
-print "KNeighbors Classifier", scores(classifier, params)
+  classifier = KNeighborsClassifier()
+  params = {'CLF__n_neighbors': range(1,5),
+            'CLF__algorithm': ('ball_tree', 'kd_tree', 'brute')}
+  print "KNeighbors Classifier", scores(classifier, params)
 
 clf = scores(classifier, params)[0]
+
+# clf = tree.DecisionTreeClassifier()
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
@@ -138,8 +144,8 @@ clf = scores(classifier, params)[0]
 
 dump_classifier_and_data(clf, my_dataset, features_list)
 
-# from tester import test_classifier
-# print "Tester Classification report" 
-# rst = test_classifier(clf, my_dataset, features_list)
+from tester import test_classifier
+print "Tester Classification report" 
+rst = test_classifier(clf, my_dataset, features_list)
 
   
