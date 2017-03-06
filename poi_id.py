@@ -32,8 +32,9 @@ for i in my_dataset:
 
 # Update features list
 
-features_list = ['poi','from_poi_ratio', 'salary','deferred_income', 'expenses','total_stock_value',
-                 'exercised_stock_options','long_term_incentive',  'director_fees', 'bonus']
+features_list = ['salary', 'total_payments', 'exercised_stock_options', 'bonus', 
+'restricted_stock', 'shared_receipt_with_poi',  'total_stock_value', 
+'deferred_income', 'long_term_incentive','from_poi_ratio']
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
@@ -100,6 +101,7 @@ def scores(classifier, params):
     return clf, score
 
 # Decision Tree Classifier
+
 if False:
   from sklearn import tree
   classifier = tree.DecisionTreeClassifier()
