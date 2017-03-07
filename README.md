@@ -72,6 +72,8 @@ I should have adopted MinMaxScaler before using PCA and KNN. As KNN are location
 
 I understand that it's important to standardize data before PCA and KNN. However, when I introduced PCA to achieve a better outcome, the scaler no longer worked well together with PCA. The scaler + PCA + SelectKBest + KNN combination gives scores significant lower than the SelectKBest + PCA + KNN combination. It may due to chance that in this Enron financial case the unequal variance is wanted because the variance is very likely contains more information about POIs. 
 
+Then I tried StandardScaler and tuned its parameters. If to set false to parameter with_std, the socres turned out to be as good as selection without any scaler, the scores are the same, which means the scaler doesn't function at all. This may support my assumption that in this Enron financial case, the variance is very likely contains more information about POIs. That's probably why I turned off 'with_std' parameter, the result became better than turned on. Thus, I didn't use any scaler in this case. [Here](https://discussions.udacity.com/t/kbest-scaler-pca-for-knn/226620/9) to see the parameters and scores.
+
 ## 3. Algorithm
 
 #### Questions
@@ -116,12 +118,12 @@ Give at least 2 evaluation metrics and your average performance for each of them
 
 ###### KNeighbors Classifier
 
-<img src="http://upload-images.jianshu.io/upload_images/2874338-abd349a4bd52a217.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
-style="width:300px;height:210px;float:left">
+<img src="http://upload-images.jianshu.io/upload_images/2874338-22ef55a1584c002b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
+style="width:320px;height:210px;float:left">
 
-The matrix above shows the Evaluation outcome of KNeighbors Classifier. The upper blocks indicate the positive outcome after training the modified classifier. The left blocks show the data points that are True POIs in reality. Vice versa. The upper left block showes the classifier did a great job in predicting POIs. Given 15000 predictions, it correctly identified 732 POIs and failed to identify 821 POIs. The lower blocks show the negative ones. It means the classifier did a great job in predicting non-POIs. It correctly identified 12173 non-POIs and failed to identify 1268 non-POIs. 
+The matrix above shows the Evaluation outcome of KNeighbors Classifier. The upper blocks indicate the positive outcome after training the modified classifier. The left blocks show the data points that are True POIs in reality. Vice versa. The upper left block showes the classifier did a great job in predicting POIs. Given 15000 predictions, it correctly identified 743 POIs and failed to identify 1257 POIs. The lower blocks show the negative ones. It means the classifier did a great job in predicting non-POIs. It correctly identified 12458 non-POIs and failed to identify 542 non-POIs. 
 
-The precision and recall rates are to describe how well the classifier does in predicting the POIs. Given the accuracy 0.86, under this algorithm, the precision is 0.47 and the recall rate is 0.37. These numbers are due to the limited records of POIs in original datasets.**The precision tells us that 47% of predicted POIs are true POIs, while the recall tells us that the classifier is able to find 37% of POIs of all people.**
+The precision and recall rates are to describe how well the classifier does in predicting the POIs. Given the accuracy 0.88, under this algorithm, the precision is 0.58 and the recall rate is 0.37. These numbers are due to the limited records of POIs in original datasets.**The precision tells us that 58% of predicted POIs are true POIs, while the recall tells us that the classifier is able to find 37% of POIs of all people.**
 
 ###### Random Forest Classifier
 

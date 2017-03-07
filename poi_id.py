@@ -88,7 +88,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
 from sklearn.feature_selection import SelectKBest
-from sklearn.preprocessing import MinMaxScaler
+#from sklearn.preprocessing import StandardScaler #MinMaxScaler 
 
 # SelectKBest, PCA used before tuning parameters 
 # to achieve a better outcome. 
@@ -130,7 +130,9 @@ if True:
 
   classifier = KNeighborsClassifier()
   params = {'CLF__n_neighbors': range(1,5),
-            'CLF__algorithm': ('ball_tree', 'kd_tree', 'brute')}
+            'CLF__algorithm': ('ball_tree', 'kd_tree', 'brute'),
+            'CLF__weights': ('uniform','distance')}
+
   print "KNeighbors Classifier", scores(classifier, params)
 
 clf = scores(classifier, params)[0]
